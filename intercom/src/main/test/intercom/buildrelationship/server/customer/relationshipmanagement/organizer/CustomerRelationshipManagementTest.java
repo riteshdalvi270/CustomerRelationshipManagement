@@ -13,6 +13,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.io.File;
+
 /**
  * JUnit test for {@link CustomerRelationshipManagement}.
  */
@@ -42,17 +44,18 @@ public class CustomerRelationshipManagementTest {
     }
 
     /**
-     * Test to ensure that {@link CustomerInformationRetriever#readCustomerData()} is called at least once.
+     * Test to ensure that {@link CustomerInformationRetriever#readCustomerData(String)} is called at least once.
      */
     @Test
     public void test_CustomerRelationshipManagement() {
 
         final CustomerResponse customerResponse = Mockito.mock(CustomerResponse.class);
-        Mockito.when(customerInformationRetriever.readCustomerData()).thenReturn(ImmutableList.of(customerResponse));
+        final File directory = new File("./");
+        Mockito.when(customerInformationRetriever.readCustomerData(directory.getAbsolutePath() + "/src/main/resources/customer.text")).thenReturn(ImmutableList.of(customerResponse));
 
         final CustomerRelationshipManagement customerRelationshipManagement = new CustomerRelationshipManagement();
         customerRelationshipManagement.main(new String[]{});
 
-        Mockito.verify(customerInformationRetriever).readCustomerData();
+        Mockito.verify(customerInformationRetriever).readCustomerData(directory.getAbsolutePath() + "/src/main/resources/customer.text");
     }
 }

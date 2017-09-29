@@ -1,6 +1,7 @@
 package intercom.buildrelationship.server.customer.relationshipmanagement.customerdata.read.impl;
 
 import com.google.common.collect.ImmutableList;
+import intercom.buildrelationship.exception.VerifyException;
 import intercom.buildrelationship.object.criteria.offices.Offices;
 import intercom.buildrelationship.object.response.CustomerResponse;
 import intercom.buildrelationship.server.customer.relationshipmanagement.customerdata.read.CustomerInformationRetriever;
@@ -34,60 +35,60 @@ public class CustomerInformationRetrieverImplTest {
     public final ExpectedException expectedException = ExpectedException.none();
 
     /**
-     * Test to ensure that {@link IllegalArgumentException} is thrown when the input to {@link CustomerInformationRetrieverImpl#createInstance(Offices)} is null.
+     * Test to ensure that {@link VerifyException} is thrown when the input to {@link CustomerInformationRetrieverImpl#createInstance(Offices)} is null.
      */
     @Test
-    public void test_IllegalArgumentException_OfficeNull() {
+    public void test_VerifyExceptionException_OfficeNull() {
 
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Input provided was not accepted");
+        expectedException.expect(VerifyException.class);
+        expectedException.expectMessage("office:null");
 
         CustomerInformationRetrieverImpl.createInstance(null);
     }
 
     /**
-     * Test to ensure that {@link IllegalArgumentException} is thrown when file to read is null.
+     * Test to ensure that {@link VerifyException} is thrown when file to read is null.
      */
     @Test
     public void test_FileToRead_Null() {
 
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("File provided is invalid");
+        expectedException.expect(VerifyException.class);
+        expectedException.expectMessage("File provided is invalid: null,empty or blank");
 
         final Offices offices = Mockito.mock(Offices.class);
 
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(offices);
-        customerInformationRetriever.fileToRead(null);
+        customerInformationRetriever.readCustomerData(null);
     }
 
     /**
-     * Test to ensure that {@link IllegalArgumentException} is thrown when file to read is empty.
+     * Test to ensure that {@link VerifyException} is thrown when file to read is empty.
      */
     @Test
     public void test_FileToRead_Empty() {
 
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("File provided is invalid");
+        expectedException.expect(VerifyException.class);
+        expectedException.expectMessage("File provided is invalid: null,empty or blank");
 
         final Offices offices = Mockito.mock(Offices.class);
 
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(offices);
-        customerInformationRetriever.fileToRead("");
+        customerInformationRetriever.readCustomerData("");
     }
 
     /**
-     * Test to ensure that {@link IllegalArgumentException} is thrown when file to read is blank.
+     * Test to ensure that {@link VerifyException} is thrown when file to read is blank.
      */
     @Test
     public void test_FileToRead_Blank() {
 
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("File provided is invalid");
+        expectedException.expect(VerifyException.class);
+        expectedException.expectMessage("File provided is invalid: null,empty or blank");
 
         final Offices offices = Mockito.mock(Offices.class);
 
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(offices);
-        customerInformationRetriever.fileToRead("   ");
+        customerInformationRetriever.readCustomerData("   ");
     }
 
     /**
@@ -99,15 +100,14 @@ public class CustomerInformationRetrieverImplTest {
         final Offices offices = Mockito.mock(Offices.class);
 
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(offices);
-        customerInformationRetriever.fileToRead("customerdata.text");
 
-        final List<CustomerResponse> customerResponses = customerInformationRetriever.readCustomerData();
+        final List<CustomerResponse> customerResponses = customerInformationRetriever.readCustomerData("customerdata.text");
 
         Assert.assertEquals(Collections.emptyList(),customerResponses);
     }
 
     /**
-     * Test to ensure that when {@link CustomerInformationRetriever#readCustomerData()} is called, the customer information is read successfully.
+     * Test to ensure that when {@link CustomerInformationRetriever#readCustomerData(String)} is called, the customer information is read successfully.
      */
     @Test
     public void test_ReadCustomerData() throws JSONException {
@@ -132,9 +132,8 @@ public class CustomerInformationRetrieverImplTest {
 
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(offices);
         File directory = new File("./");
-        customerInformationRetriever.fileToRead(directory.getAbsolutePath() + "/src/main/test/intercom/buildrelationship/server/customer/relationshipmanagement/customerdata/read/impl/customer.text");
 
-        final List<CustomerResponse> actualCustomerResponses = customerInformationRetriever.readCustomerData();
+        final List<CustomerResponse> actualCustomerResponses = customerInformationRetriever.readCustomerData(directory.getAbsolutePath() + "/src/main/test/intercom/buildrelationship/server/customer/relationshipmanagement/customerdata/read/impl/customer.text");
 
         final List<CustomerResponse> expectedCustomerResponses = ImmutableList.of(expectedCustomerResponse1,expectedCustomerResponse2);
 

@@ -1,5 +1,6 @@
 package intercom.buildrelationship.server.customer.relationshipmanagement.customerdata.read;
 
+import intercom.buildrelationship.exception.Verifier;
 import intercom.buildrelationship.object.response.CustomerResponse;
 import intercom.buildrelationship.server.customer.relationshipmanagement.invite.CustomersToInvite;
 import org.codehaus.jettison.json.JSONException;
@@ -23,21 +24,17 @@ public abstract class CustomerInformationRetriever {
 
     private final Logger logger = Logger.getLogger(getClass().getName());
 
-    protected String fileToRead;
     protected CustomersToInvite customersToInvite;
 
     /**
-     * Set the file to read.
-     * @param fileToRead The file to read from.
-     * @throws {@link intercom.buildrelationship.exception.VerifyException} when input provided is null, empty or blank.
-     */
-    public abstract void fileToRead(final String fileToRead);
-
-    /**
      * Read the customer data.
+     * @param fileToRead The file to read (cannot be null, empty or blank).
      * @return non-null, possibly empty List of {@link CustomerResponse}.
+     * @throw {@link intercom.buildrelationship.exception.VerifyException} if file to be read is null.
      */
-    public List<CustomerResponse> readCustomerData() {
+    public List<CustomerResponse> readCustomerData(final String fileToRead) {
+
+        Verifier.verifyBlank(fileToRead, "File provided is invalid: null,empty or blank");
 
         final List<CustomerResponse> customerResponses = new ArrayList<>();
 
@@ -63,6 +60,9 @@ public abstract class CustomerInformationRetriever {
                     return Integer.valueOf(customerResponse1.getCustomerUserId()).compareTo(Integer.valueOf(customerResponse2.getCustomerUserId()));
                 }
             });
+
+            bufferedReader.close();
+            fileReader.close();
 
         }catch (final FileNotFoundException fileNotFound) {
 

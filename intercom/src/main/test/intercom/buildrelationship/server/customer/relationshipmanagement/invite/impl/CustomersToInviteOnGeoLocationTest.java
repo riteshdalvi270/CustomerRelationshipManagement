@@ -1,5 +1,6 @@
 package intercom.buildrelationship.server.customer.relationshipmanagement.invite.impl;
 
+import intercom.buildrelationship.exception.VerifyException;
 import intercom.buildrelationship.object.criteria.offices.Offices;
 import intercom.buildrelationship.object.response.CustomerResponse;
 import intercom.buildrelationship.server.customer.relationshipmanagement.invite.CustomersToInvite;
@@ -22,13 +23,13 @@ public class CustomersToInviteOnGeoLocationTest {
     public final ExpectedException expectedException = ExpectedException.none();
 
     /**
-     * Test to ensure that {@link IllegalArgumentException} is thrown when {@link CustomersToInviteOnGeoLocation#customersToInvite(Offices)} is called with null input.
+     * Test to ensure that {@link VerifyException} is thrown when {@link CustomersToInviteOnGeoLocation#customersToInvite(Offices)} is called with null input.
      */
     @Test
-    public void test_IllegalArgumentException_InputNull() {
+    public void test_VerifyExceptionException_InputNull() {
 
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("The office provided in not valid");
+        expectedException.expect(VerifyException.class);
+        expectedException.expectMessage("Office:null");
 
         CustomersToInviteOnGeoLocation.customersToInvite(null);
     }

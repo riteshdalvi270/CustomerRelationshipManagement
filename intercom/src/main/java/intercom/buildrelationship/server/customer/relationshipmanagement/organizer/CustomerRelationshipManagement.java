@@ -8,7 +8,6 @@ import intercom.buildrelationship.server.customer.relationshipmanagement.custome
 import java.awt.Point;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * We want to invite any customer within 100km of our Dublin office (GPS coordinates 53.3381985, -6.2592576) for some food and drinks on us.
@@ -29,9 +28,8 @@ public class CustomerRelationshipManagement {
 
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(dublin);
         final File directory = new File("./");
-        customerInformationRetriever.fileToRead(directory.getAbsolutePath() + "/src/main/resources/customer.text");
 
-        List<CustomerResponse> customerResponses = customerInformationRetriever.readCustomerData();
+        List<CustomerResponse> customerResponses = customerInformationRetriever.readCustomerData(directory.getAbsolutePath() + "/src/main/resources/customer.text");
 
         System.out.println("Number of customers: " + customerResponses.size());
 

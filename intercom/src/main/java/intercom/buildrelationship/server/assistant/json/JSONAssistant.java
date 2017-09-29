@@ -1,5 +1,6 @@
 package intercom.buildrelationship.server.assistant.json;
 
+import intercom.buildrelationship.exception.Verifier;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -54,18 +55,16 @@ public class JSONAssistant {
      * @param jsonObject The {@link JSONObject} (cannot be null).
      * @param key The key to be used to retrieve from the {@link JSONObject} (cannot be null,empty or blank).
      * @return non-null {@link String} representing the Json string.
-     * @throw {@link IllegalArgumentException} if {@link JSONObject} or key is null or empty. {@link InternalException} if fails to retrieve json string using the key provided
+     * @throw {@link intercom.buildrelationship.exception.VerifyException} if {@link JSONObject} or key is null or empty. {@link RuntimeException} if fails to retrieve json string using the key provided
      */
     private static String getSafeJSONObject(final JSONObject jsonObject, final String key) {
-
-        if(jsonObject == null || key == null || key.trim().isEmpty()) {
-            throw new IllegalArgumentException("Malformed json key or null object");
-        }
+        Verifier.verifyNotNull(jsonObject, "jsonObject:null");
+        Verifier.verifyBlank(key, "key:null,empty or blank");
 
         if(jsonObject.has(key)) {
             return jsonObject.optString(key);
         }else {
-            throw new InternalException("Failed to retrieve json string from the json object using key");
+            throw new RuntimeException("Failed to retrieve json string from the json object using key");
         }
     }
 }
