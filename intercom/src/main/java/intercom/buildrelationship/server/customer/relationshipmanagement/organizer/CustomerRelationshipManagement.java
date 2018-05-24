@@ -29,7 +29,7 @@ public class CustomerRelationshipManagement {
         final CustomerInformationRetriever customerInformationRetriever = CustomerInformationRetrieverImpl.createInstance(dublin);
         final File directory = new File("./");
 
-        List<CustomerResponse> customerResponses = customerInformationRetriever.readCustomerData(directory.getAbsolutePath() + "/src/main/resources/customer.text");
+        List<CustomerResponse> customerResponses = customerInformationRetriever.readCustomerData(directory.getAbsolutePath() + "/intercom/src/main/resources/customer.text");
 
         System.out.println("Number of customers: " + customerResponses.size());
 
